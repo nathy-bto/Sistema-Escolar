@@ -1,27 +1,27 @@
 # Sistema-Escolar
 Projeto da materia Estrutura de dados
 
-Objetivo:
+1. Objetivo:
 Desenvolver um sistema escolar em linguagem C utilizando uma lista estática para gerenciar alunos, turmas, professores, cursos e matrículas.
 Funcionalidades Principais:
 
-Cadastro de Alunos:
+2. Cadastro de Alunos:
 Permitir o cadastro de alunos com informações como matrícula, nome, idade, etc. 
 Manter uma lista dinâmica estática de alunos com tamanho máximo pré-definido.
 
-Cadastro de Cursos:
+3. Cadastro de Cursos:
 Permitir o registro de cursos com detalhes como nome do curso, carga horária, etc.
 Manter uma lista dinâmica estática de cursos com tamanho máximo pré-definido.
 
-Matrícula em Cursos:
+4. Matrícula em Cursos:
 Permitir a matrícula de um aluno em um ou mais cursos.
 Estabelecer essa relação entre aluno e curso através da lista dinâmica estática.
 
-Cadastro de Turmas:
+5. Cadastro de Turmas:
 Possibilitar o cadastro de turmas com informações como identificador, disciplina, etc.
 Manter uma lista dinâmica estática de turmas com tamanho máximo pré-definido.
 
-Designação de Professores:
+6. Designação de Professores:
 Permitir a atribuição de professores a turmas específicas.
 Relacionar professores e turmas através da lista dinâmica estática.
 
