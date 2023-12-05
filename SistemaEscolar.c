@@ -24,7 +24,8 @@ typedef struct{
 typedef struct{
     char nomeCurso;
     double cargaHoraria;
-    Aluno alunosCurso[MAX_SIZE_MATRICULADOS]
+    Aluno alunosCurso[MAX_SIZE_MATRICULADOS];
+    int quantidadeAlunos;
 }Curso;
 
 typedef struct{
@@ -124,6 +125,6 @@ void insereProfessores(cadastroProfessores *listaProfessores, char nome, cadastr
     
 }
 
-void matriculaCurso (cadastroCurso *curso, cadastroAluno *aluno){
-    for(int i = 0; i < MAX)
+void matriculaCurso (curso *curso, cadastroAluno *aluno){
+    for(int i = 0; i < curso->alunos)
 }
