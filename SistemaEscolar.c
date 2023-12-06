@@ -1,75 +1,82 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define MAX_SIZE_ALUNOS 800
 #define MAX_SIZE_CURSOS 15
 #define MAX_SIZE_TURMAS 30
 #define MAX_SIZE_PROFESSORES 20
 
+// Declaração prévia da estrutura Curso
+typedef struct Curso Curso;
+
+// Declaração prévia da estrutura Professor
+typedef struct Professor Professor;
+
+// Declaração prévia da estrutura cadastroTurmas
+typedef struct cadastroTurmas cadastroTurmas;
+
 // Estruturas que definem cadastro de cursos
-typedef struct{
-    char nomeCurso;
+struct Curso {
+    char nomeCurso[50];
     double cargaHoraria;
     Curso *proximoCurso;
-}Curso;
+};
 
-typedef struct{
+typedef struct {
     Curso cursos[MAX_SIZE_CURSOS];
     int tamanhoListaCursos;
-}cadastroCursos;
+} cadastroCursos;
 
 // Estruturas que definem cadastro de alunos
-typedef struct{
+typedef struct {
     char nome[50];
-    char matricula[10]; //permite letras, caracteres e numeros na matricula
+    char matricula[10]; // permite letras, caracteres e numeros na matricula
     int idade;
-    cadastroCursos cursosAluno[MAX_SIZE_CURSOS];
+    Curso cursosAluno[MAX_SIZE_CURSOS];
     int quantidadeCursos;
-}Aluno;
+} Aluno;
 
-typedef struct{
+typedef struct {
     Aluno alunos[MAX_SIZE_ALUNOS];
     int tamanhoListaAlunos;
-}cadastroAlunos;
-
-// Estrutura que define cadastro de turmas
-
-typedef struct{
-    char identificador;
-    cadastroAlunos alunosMatriculados;
-    Professor professorResponsavel;
-}Turma;
-
-typedef struct{
-    Turma turmas[MAX_SIZE_TURMAS];
-    int tamanhoListaTurmas;
-}cadastroTurmas;
+} cadastroAlunos;
 
 // Estrutura que define cadastro de professores
-typedef struct {
-    char nome;
-    char disciplinaLecionada;
-    cadastroTurmas turmasMinistradas;
-}Professor;
+struct Professor {
+    char nome[50];
+    char disciplinaLecionada[50];
+    Turma *turmasMinistradas;
+};
 
-typedef struct{
+typedef struct {
     Professor professores[MAX_SIZE_PROFESSORES];
     int tamanhoListaProfessores;
-}cadastroProfessores;
+} cadastroProfessores;
 
+// Estrutura que define cadastro de turmas
+typedef struct {
+    char identificador;
+    cadastroAlunos alunosMatriculados;
+    Professor *professorResponsavel;
+} Turma;
+
+typedef struct {
+    Turma turmas[MAX_SIZE_TURMAS];
+    int tamanhoListaTurmas;
+} cadastroTurmas;
 
 // Iniciando listas
-void iniciaLista(cadastroAlunos *lista, cadastroCursos *lista2, cadastroTurmas *lista3, cadastroProfessores *lista4){
-    lista->tamanhoListaAlunos = 0; //a lista deve iniciar com tamanho atual zero
+void iniciaLista(cadastroAlunos *lista, cadastroCursos *lista2, cadastroTurmas *lista3, cadastroProfessores *lista4) {
+    lista->tamanhoListaAlunos = 0;
     lista2->tamanhoListaCursos = 0;
     lista3->tamanhoListaTurmas = 0;
     lista4->tamanhoListaProfessores = 0;
 }
 
-//inserindo alunos na lista
-void insereAluno(cadastroAlunos *lista, const char *nome, const char *matricula, int idade){
-    if (lista->tamanhoListaAlunos < MAX_SIZE_ALUNOS)
-    {
+// Inserindo alunos na lista
+void insereAluno(cadastroAlunos *lista, const char *nome, const char *matricula, int idade) {
+    if (lista->tamanhoListaAlunos < MAX_SIZE_ALUNOS) {
         Aluno novoAluno;
 
         strcpy(novoAluno.nome, nome);
@@ -78,72 +85,69 @@ void insereAluno(cadastroAlunos *lista, const char *nome, const char *matricula,
 
         lista->alunos[lista->tamanhoListaAlunos] = novoAluno;
 
-        //incrementando o tamanho da lista
+        // Incrementando o tamanho da lista
         lista->tamanhoListaAlunos++;
-    }else{
-        printf("lista cheia! o aluno não pode ser adicionado");
+    } else {
+        printf("Lista cheia! O aluno não pode ser adicionado.\n");
     }
 }
 
-//inserindo cursos na lista
-void insereCurso(cadastroCursos *lista, const char nomeCurso, double cargaHoraria){
-    if (lista->tamanhoListaCursos < MAX_SIZE_CURSOS)
-    {
+// Inserindo cursos na lista
+void insereCurso(cadastroCursos *lista, const char *nomeCurso, double cargaHoraria) {
+    if (lista->tamanhoListaCursos < MAX_SIZE_CURSOS) {
         Curso novoCurso;
 
-        strcpy(novoCurso.nomeCurso, nomeCurso);
-        novoCurso.cargaHoraria, cargaHoraria;
+        strncpy(novoCurso.nomeCurso, nomeCurso, sizeof(novoCurso.nomeCurso) - 1);
+        novoCurso.cargaHoraria = cargaHoraria;
 
         lista->cursos[lista->tamanhoListaCursos] = novoCurso;
 
-        //incrementando o tamanho da lista
+        // Incrementando o tamanho da lista
         lista->tamanhoListaCursos++;
-    }else{
-        printf("lista cheia! o curso não pode ser adicionado na lista");
+    } else {
+        printf("Lista cheia! O curso não pode ser adicionado na lista.\n");
     }
 }
 
-//inserindo turmas na lista
-void insereTurmas(cadastroTurmas *listaTurmas, const char identificador, cadastroAlunos alunosMatriculados){
-    if (listaTurmas->tamanhoListaTurmas < MAX_SIZE_TURMAS)
-    {
-        //encaixar a nova turma na lista
+// Inserindo turmas na lista
+void insereTurmas(cadastroTurmas *listaTurmas, const char identificador, cadastroAlunos alunosMatriculados) {
+    if (listaTurmas->tamanhoListaTurmas < MAX_SIZE_TURMAS) {
+        // Encaixar a nova turma na lista
         Turma novaTurma;
 
         novaTurma.identificador = identificador;
         novaTurma.alunosMatriculados = alunosMatriculados;
+        novaTurma.professorResponsavel = NULL; // Inicializando como NULL
 
         listaTurmas->turmas[listaTurmas->tamanhoListaTurmas] = novaTurma;
 
-        //incrementando o tamanho da lista
+        // Incrementando o tamanho da lista
         listaTurmas->tamanhoListaTurmas++;
-    }else{
-        printf("lista cheia! a turma não pode ser adicionada na lista");
+    } else {
+        printf("Lista cheia! A turma não pode ser adicionada na lista.\n");
     }
 }
 
-//inserindo professores na lista
-void insereProfessores(cadastroProfessores *listaProfessores, char nome, cadastroTurmas disciplinasLecionadas, cadastroTurmas turmasMinistradas){
-    if (listaProfessores->tamanhoListaProfessores < MAX_SIZE_PROFESSORES)
-    {
+// Inserindo professores na lista
+void insereProfessores(cadastroProfessores *listaProfessores, const char *nome, const char *disciplinasLecionadas, cadastroTurmas turmasMinistradas) {
+    if (listaProfessores->tamanhoListaProfessores < MAX_SIZE_PROFESSORES) {
         Professor novoProfessor;
 
-        novoProfessor.nome = nome;
-        strcpy(novoProfessor.disciplinaLecionada, disciplinasLecionadas);
+        strncpy(novoProfessor.nome, nome, sizeof(novoProfessor.nome) - 1);
+        strncpy(novoProfessor.disciplinaLecionada, disciplinasLecionadas, sizeof(novoProfessor.disciplinaLecionada) - 1);
         novoProfessor.turmasMinistradas = turmasMinistradas;
 
         listaProfessores->professores[listaProfessores->tamanhoListaProfessores] = novoProfessor;
-       
+
         listaProfessores->tamanhoListaProfessores++;
-    }else{
-        printf("lista cheia! o professor não pode ser adicionado na lista");
+    } else {
+        printf("Lista cheia! O professor não pode ser adicionado na lista.\n");
     }
-    
 }
 
 // Função para matricular um aluno em um curso
 void matricularAluno(cadastroAlunos *lista, cadastroCursos *lista1) {
-    if ( lista->tamanhoListaAlunos == 0 || lista1->tamanhoListaCursos == 0) {
+    if (lista->tamanhoListaAlunos == 0 || lista1->tamanhoListaCursos == 0) {
         printf("Não há alunos ou cursos cadastrados. Cadastre alunos e cursos antes de matricular.\n");
         return;
     }
@@ -181,11 +185,29 @@ void matricularAluno(cadastroAlunos *lista, cadastroCursos *lista1) {
     }
 
     // Realiza a matrícula do aluno no curso escolhido
-    lista->alunos[qualAluno - 1].cursosAluno[lista->alunos[qualAluno - 1].quantidadeCursos].cursos[lista->alunos[qualAluno-1]->quantidadeCursos] = lista1->cursos[qualCurso - 1];
-   
+    lista->alunos[qualAluno - 1].cursosAluno[lista->alunos[qualAluno - 1].quantidadeCursos] = lista1->cursos[qualCurso - 1];
+
     lista->alunos[qualAluno - 1].quantidadeCursos++;
 
     printf("Aluno matriculado no curso com sucesso!\n");
 }
 
+int main() {
+    // Exemplo de uso
+    cadastroAlunos listaAlunos;
+    cadastroCursos listaCursos;
+    cadastroTurmas listaTurmas;
+    cadastroProfessores listaProfessores;
 
+    iniciaLista(&listaAlunos, &listaCursos, &listaTurmas, &listaProfessores);
+
+    insereAluno(&listaAlunos, "Joao", "A12345", 20);
+    insereAluno(&listaAlunos, "Maria", "B67890", 25);
+
+    insereCurso(&listaCursos, "Programacao C", 40.0);
+    insereCurso(&listaCursos, "Banco de Dados", 30.0);
+
+    matricularAluno(&listaAlunos, &listaCursos);
+
+    return 0;
+}
