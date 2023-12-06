@@ -7,31 +7,12 @@
 #define MAX_SIZE_TURMAS 30
 #define MAX_SIZE_PROFESSORES 20
 
-// Declaração prévia da estrutura Curso
-typedef struct Curso Curso;
-
-// Declaração prévia da estrutura Turma
-typedef struct Turma Turma;
-
-// Declaração prévia da estrutura Professor
-typedef struct Professor Professor;
-
-// Declaração prévia da estrutura cadastroTurmas
-typedef struct cadastroTurmas cadastroTurmas;
-
 // Estruturas que definem cadastro de cursos
-struct Curso {
+typedef struct{
     char nomeCurso[50];
     double cargaHoraria;
     Curso *proximoCurso;
-};
-
-// Estrutura que define cadastro de turmas
-struct Turma {
-    char identificador;
-    cadastroAlunos alunosMatriculados;
-    Professor *professorResponsavel;
-};
+}Curso;
 
 typedef struct {
     Curso cursos[MAX_SIZE_CURSOS];
@@ -41,7 +22,7 @@ typedef struct {
 // Estruturas que definem cadastro de alunos
 typedef struct {
     char nome[50];
-    char matricula[10]; // permite letras, caracteres e números na matrícula
+    char matricula[10]; // permite letras, caracteres e numeros na matricula
     int idade;
     Curso cursosAluno[MAX_SIZE_CURSOS];
     int quantidadeCursos;
@@ -53,11 +34,11 @@ typedef struct {
 } cadastroAlunos;
 
 // Estrutura que define cadastro de professores
-struct Professor {
+typedef struct  {
     char nome[50];
     char disciplinaLecionada[50];
     Turma *turmasMinistradas;
-};
+}Professor;
 
 typedef struct {
     Professor professores[MAX_SIZE_PROFESSORES];
@@ -65,10 +46,16 @@ typedef struct {
 } cadastroProfessores;
 
 // Estrutura que define cadastro de turmas
-struct cadastroTurmas {
+typedef struct {
+    char identificador;
+    cadastroAlunos alunosMatriculados;
+    Professor professorResponsavel;
+} Turma;
+
+typedef struct {
     Turma turmas[MAX_SIZE_TURMAS];
     int tamanhoListaTurmas;
-};
+} cadastroTurmas;
 
 // Iniciando listas
 void iniciaLista(cadastroAlunos *lista, cadastroCursos *lista2, cadastroTurmas *lista3, cadastroProfessores *lista4) {
@@ -150,9 +137,6 @@ void insereProfessores(cadastroProfessores *listaProfessores, const char *nome, 
     
 }
 
-<<<<<<< HEAD
-
-
 //funcao para buscar um aluno na lista
 int buscarAluno(cadastroAlunos cadastro, char nome[], char matricula[]){
     for (int i = 0; i < cadastro.tamanhoListaAlunos; i++)
@@ -176,12 +160,11 @@ int buscarCurso(cadastroCursos cadastro2, char nomeCurso[], double cargaHoraria)
     return -1;
 }
 
-//funcao para buscar turmas na lista
 int buscarTurmas(cadastroTurmas cadastro3, char identificador, cadastroAlunos alunosMatriculados, cadastroProfessores professoresResponsaveis) {
     for (int i = 0; i < cadastro3.tamanhoListaTurmas; i++) {
         if (cadastro3.turmas[i].identificador == identificador &&
-            strcmp(cadastro3.turmas[i].alunosMatriculados, alunosMatriculados) == 0 &&
-            strcmp(cadastro3.turmas[i].professoresResponsaveis, professoresResponsaveis) == 0) {
+            cadastro3.turmas[i].alunosMatriculados == alunosMatriculados &&
+            cadastro3.turmas[i].professorResponsavel == professoresResponsaveis) {
             return i;
         }
     }
