@@ -6,25 +6,11 @@
 #define MAX_SIZE_TURMAS 30
 #define MAX_SIZE_PROFESSORES 20
 
-
-//estruturas que definem cadastro de alunos
-typedef struct{
-    char nome[50];
-    char matricula[10]; //permite letras, caracteres e numeros na matricula
-    int idade;
-    Curso cursosAluno[MAX_SIZE_CURSOS];
-    int quantidadeCursos;
-}Aluno;
-
-typedef struct{
-    Aluno alunos[MAX_SIZE_ALUNOS];
-    int tamanhoListaAlunos;
-}cadastroAlunos;
-
-//estruturas que definem cadastro de cursos
+// Estruturas que definem cadastro de cursos
 typedef struct{
     char nomeCurso;
     double cargaHoraria;
+    Curso *proximoCurso;
 }Curso;
 
 typedef struct{
@@ -32,11 +18,25 @@ typedef struct{
     int tamanhoListaCursos;
 }cadastroCursos;
 
-//estrutura que define cadastro de turmas
+// Estruturas que definem cadastro de alunos
+typedef struct{
+    char nome[50];
+    char matricula[10]; //permite letras, caracteres e numeros na matricula
+    int idade;
+    cadastroCursos cursosAluno[MAX_SIZE_CURSOS];
+}Aluno;
+
+typedef struct{
+    Aluno alunos[MAX_SIZE_ALUNOS];
+    int tamanhoListaAlunos;
+}cadastroAlunos;
+
+// Estrutura que define cadastro de turmas
+
 typedef struct{
     char identificador;
     cadastroAlunos alunosMatriculados;
-    Professor professoresResponsaveis;
+    Professor professorResponsavel;
 }Turma;
 
 typedef struct{
@@ -44,11 +44,11 @@ typedef struct{
     int tamanhoListaTurmas;
 }cadastroTurmas;
 
-//estrutura que define cadastro de professores
+// Estrutura que define cadastro de professores
 typedef struct {
     char nome;
-    char disciplinasLecionadas;
-    Turma turmasMinistradas;
+    char disciplinaLecionada;
+    cadastroTurmas turmasMinistradas;
 }Professor;
 
 typedef struct{
@@ -57,7 +57,7 @@ typedef struct{
 }cadastroProfessores;
 
 
-//iniciando listas
+// Iniciando listas
 void iniciaLista(cadastroAlunos *lista, cadastroCursos *lista2, cadastroTurmas *lista3, cadastroProfessores *lista4){
     lista->tamanhoListaAlunos = 0; //a lista deve iniciar com tamanho atual zero
     lista2->tamanhoListaCursos = 0;
