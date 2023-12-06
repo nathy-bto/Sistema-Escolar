@@ -143,8 +143,65 @@ void insereProfessores(cadastroProfessores *listaProfessores, const char *nome, 
     } else {
         printf("Lista cheia! O professor não pode ser adicionado na lista.\n");
     }
+    
 }
 
+<<<<<<< HEAD
+
+
+//funcao para buscar um aluno na lista
+int buscarAluno(cadastroAlunos cadastro, char nome[], char matricula[]){
+    for (int i = 0; i < cadastro.tamanhoListaAlunos; i++)
+    {
+        if (strcmp(cadastro.alunos[i].nome, nome) == 0 || strcmp(cadastro.alunos[i].matricula, matricula) == 0)
+        {
+            //retorna o indice do aluno
+            return i; 
+        }
+    }
+    return -1;
+}
+
+//funcao para buscar um curso na lista
+int buscarCurso(cadastroCursos cadastro2, char nomeCurso[], double cargaHoraria){
+    for (int i = 0; i < cadastro2.tamanhoListaCursos; i++)
+    {
+        if (strcmp(cadastro2.cursos[i].nomeCurso) == 0 || strcmp(cadastro2.cursos[i].cargaHoraria, cargaHoraria) == 0)
+        {
+            return i;
+        }
+        
+    }
+    return -1;
+}
+
+//funcao para buscar turmas na lista
+int buscarTurmas(cadastroTurmas cadastro3, char identificador, cadastroAlunos alunosMatriculados, cadastroProfessores professoresResponsaveis){
+    for (int i = 0; i < cadastro3.tamanhoListaTurmas; i++)
+    {
+        if (cadastro3.turmas[i].identificador == identificador &&
+            strcmp(cadastro3.turmas[i].alunosMatriculados, alunosMatriculados) == 0 &&
+            strcmp(cadastro3.turmas[i].professoresResponsaveis, professoresResponsaveis) == 0){
+            return i;
+        }
+    }
+    return -1;
+}
+
+//funcao para buscar professores na lista
+    int buscarProfessor(cadastroProfessores cadastro4, char nome[],char disciplinasLecionadas, cadastroTurmas turmasMinistradas){
+        for (int i = 0; i < cadastro4.tamanhoListaProfessores; i++)
+        {
+            if (strcmp(cadastro4.professores[i].nome, nome) == 0 &&
+                strcmp(cadastro4.professores[i].disciplinasLecionadas, disciplinasLecionadas) ==  &&
+                strcmp(cadastro4.professores[i].turmasMinistradas, turmasMinistradas) == 0)
+            {
+                return i;
+            }
+        }
+        return printf("professor não encontrado");
+    }
+=======
 // Função para matricular um aluno em um curso
 void matricularAluno(cadastroAlunos *lista, cadastroCursos *lista1) {
     if (lista->tamanhoListaAlunos == 0 || lista1->tamanhoListaCursos == 0) {
