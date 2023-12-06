@@ -5,7 +5,6 @@
 #define MAX_SIZE_CURSOS 15
 #define MAX_SIZE_TURMAS 30
 #define MAX_SIZE_PROFESSORES 20
-#define MAX_SIZE_MATRICULADOS 50
 
 
 //estruturas que definem cadastro de alunos
@@ -24,8 +23,6 @@ typedef struct{
 typedef struct{
     char nomeCurso;
     double cargaHoraria;
-    Aluno alunosCurso[MAX_SIZE_MATRICULADOS];
-    int quantidadeAlunos;
 }Curso;
 
 typedef struct{
@@ -37,7 +34,7 @@ typedef struct{
 typedef struct{
     char identificador;
     cadastroAlunos alunosMatriculados;
-    cadastroProfessores professoresResponsaveis;
+    cadastroProfessores professoresResponsavies;
 }Turma;
 
 typedef struct{
@@ -123,8 +120,4 @@ void insereProfessores(cadastroProfessores *listaProfessores, char nome, cadastr
         printf("lista cheia! o professor não pode ser adicionado na lista");
     }
     
-}
-
-void matriculaCurso (curso *curso, cadastroAluno *aluno){
-    for(int i = 0; i < curso->alunos)
 }
