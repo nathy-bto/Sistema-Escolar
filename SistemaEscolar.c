@@ -24,6 +24,7 @@ typedef struct{
     char matricula[10]; //permite letras, caracteres e numeros na matricula
     int idade;
     cadastroCursos cursosAluno[MAX_SIZE_CURSOS];
+    int quantidadeCursos;
 }Aluno;
 
 typedef struct{
@@ -75,7 +76,7 @@ void insereAluno(cadastroAlunos *lista, const char *nome, const char *matricula,
         strcpy(novoAluno.matricula, matricula);
         novoAluno.idade = idade;
 
-        lista->alunos[tamanhoListaAlunos] = novoAluno;
+        lista->alunos[lista->tamanhoListaAlunos] = novoAluno;
 
         //incrementando o tamanho da lista
         lista->tamanhoListaAlunos++;
@@ -85,18 +86,18 @@ void insereAluno(cadastroAlunos *lista, const char *nome, const char *matricula,
 }
 
 //inserindo cursos na lista
-void insereCurso(cadastroCursos *listaCurso, const char nomeCurso, double cargaHoraria){
-    if (listaCurso->tamanhoListaCursos < MAX_SIZE_CURSOS)
+void insereCurso(cadastroCursos *lista, const char nomeCurso, double cargaHoraria){
+    if (lista->tamanhoListaCursos < MAX_SIZE_CURSOS)
     {
-        Curso novoCurso
+        Curso novoCurso;
 
         strcpy(novoCurso.nomeCurso, nomeCurso);
         novoCurso.cargaHoraria, cargaHoraria;
 
-        lista->cursos[tamanhoListaCursos] = novoCurso;
+        lista->cursos[lista->tamanhoListaCursos] = novoCurso;
 
         //incrementando o tamanho da lista
-        listaCurso->tamanhoListaCursos++;
+        lista->tamanhoListaCursos++;
     }else{
         printf("lista cheia! o curso não pode ser adicionado na lista");
     }
@@ -128,7 +129,7 @@ void insereProfessores(cadastroProfessores *listaProfessores, char nome, cadastr
         Professor novoProfessor;
 
         novoProfessor.nome = nome;
-        novoProfessor.disciplinasLecionadas = disciplinasLecionadas;
+        strcpy(novoProfessor.disciplinaLecionada, disciplinasLecionadas);
         novoProfessor.turmasMinistradas = turmasMinistradas;
 
         listaProfessores->professores[listaProfessores->tamanhoListaProfessores] = novoProfessor;
@@ -142,7 +143,7 @@ void insereProfessores(cadastroProfessores *listaProfessores, char nome, cadastr
 
 // Função para matricular um aluno em um curso
 void matricularAluno(cadastroAlunos *lista, cadastroCursos *lista1) {
-    if ( lista->tamanhoListaAlunos == 0 || lista->tamanhoListaCursos == 0) {
+    if ( lista->tamanhoListaAlunos == 0 || lista1->tamanhoListaCursos == 0) {
         printf("Não há alunos ou cursos cadastrados. Cadastre alunos e cursos antes de matricular.\n");
         return;
     }
@@ -151,8 +152,8 @@ void matricularAluno(cadastroAlunos *lista, cadastroCursos *lista1) {
 
     // Exibe a lista de alunos disponíveis
     printf("\n=== Alunos Disponíveis ===\n");
-    for (int i = 0; i < *numAlunos; i++) {
-        printf("%d. %s\n", i + 1, alunos[i].nome);
+    for (int i = 0; i < lista->tamanhoListaAlunos; i++) {
+        printf("%d. %s\n", i + 1, lista->alunos[i].nome);
     }
 
     // Solicita a escolha do aluno
@@ -167,7 +168,7 @@ void matricularAluno(cadastroAlunos *lista, cadastroCursos *lista1) {
     // Exibe a lista de cursos disponíveis
     printf("\n=== Cursos Disponíveis ===\n");
     for (int i = 0; i < lista1->tamanhoListaCursos; i++) {
-        printf("%d. %s\n", i + 1, lista1.cursos[i].nome);
+        printf("%d. %s\n", i + 1, lista1->cursos[i].nomeCurso);
     }
 
     // Solicita a escolha do curso
@@ -180,7 +181,7 @@ void matricularAluno(cadastroAlunos *lista, cadastroCursos *lista1) {
     }
 
     // Realiza a matrícula do aluno no curso escolhido
-    lista->alunos[qualAluno - 1].cursosAluno[lista->alunos[qualAluno - 1].quantidadeCursos] = lista1->cursos[qualCurso - 1];
+    lista->alunos[qualAluno - 1].cursosAluno[lista->alunos[qualAluno - 1].quantidadeCursos].cursos[lista->alunos[qualAluno-1]->quantidadeCursos] = lista1->cursos[qualCurso - 1];
    
     lista->alunos[qualAluno - 1].quantidadeCursos++;
 
