@@ -7,6 +7,12 @@
 #define MAX_SIZE_TURMAS 20
 #define MAX_SIZE_PROFESSORES 30
 
+// Estrutura para armazenar informações de curso
+typedef struct{
+    char nomeCurso[50];
+    int cargaHoraria;
+} Curso;
+
 // Estrutura para armazenar informações de aluno
 typedef struct{
     char nome[50];
@@ -16,44 +22,40 @@ typedef struct{
     int quantidadeCursos;
 } Aluno;
 
-// Estrutura para armazenar informações de curso
-typedef struct{
-    char nomeCurso[50];
-    int cargaHoraria;
-} Curso;
-
-// Estrutura para armazenar informações de turma
-typedef struct{
-    int identificador;
-    listaAlunos alunosMatriculados[MAX_SIZE_ALUNOS];
-    int quantidadeAlunos;
-    Professor professorResponsavel;
-} Turma;
-
-// Estrutura para armazenar informações de professor
-typedef struct{
-    char nome[50];
-    char disciplina[50];
-    int turmas[MAX_SIZE_TURMAS];
-} Professor;
-
 // Alunos
 typedef struct{
     Aluno alunos[MAX_SIZE_ALUNOS];
     int tamanhoListaAlunos;
 } listaAlunos;
 
-// Cursos
+// Estrutura para armazenar informações de turma
 typedef struct{
-    Curso cursos[MAX_SIZE_CURSOS];
-    int tamanhoListaCursos;
-} listaCursos;
+    int identificador;
+    listaAlunos alunosMatriculados[MAX_SIZE_ALUNOS];
+    int quantidadeAlunos;
+} Turma;
 
 // Turmas
 typedef struct{
     Turma turmas[MAX_SIZE_TURMAS];
     int tamanhoListaTurmas;
 } listaTurmas;
+
+// Estrutura para armazenar informações de professor
+typedef struct{
+    char nome[50];
+    char disciplinaLecionada[50];
+    listaTurmas turmasMinistradas[MAX_SIZE_TURMAS];
+    int quantidadeTurmas;
+} Professor;
+
+
+
+// Cursos
+typedef struct{
+    Curso cursos[MAX_SIZE_CURSOS];
+    int tamanhoListaCursos;
+} listaCursos;
 
 // Professores
 typedef struct{
@@ -78,7 +80,7 @@ void inicializarListas(listaAlunos *alunos, listaCursos *cursos, listaTurmas *tu
 
 
 // Função para cadastrar um novo aluno
-void cadastrarAluno(listaAlunos *listaAluno, char nome, int matricula, int idade)
+void cadastrarAluno(listaAlunos *listaAluno, const char *nome, int idade)
 {
 
     if (listaAluno->tamanhoListaAlunos < MAX_SIZE_ALUNOS)
@@ -87,7 +89,7 @@ void cadastrarAluno(listaAlunos *listaAluno, char nome, int matricula, int idade
         Aluno novoAluno;
 
         strcpy(novoAluno.nome, nome);
-        novoAluno.matricula = matricula;
+
         novoAluno.idade = idade;
 
         // Adiciona o novo aluno ao array de alunos
@@ -95,6 +97,8 @@ void cadastrarAluno(listaAlunos *listaAluno, char nome, int matricula, int idade
 
         // Atualiza o número de alunos
         listaAluno->tamanhoListaAlunos++;
+        // Criando a matrícula do aluno
+        novoAluno.matricula = listaAluno->tamanhoListaAlunos;
 
         printf("Aluno cadastrado com sucesso!\n");
     }
@@ -105,7 +109,7 @@ void cadastrarAluno(listaAlunos *listaAluno, char nome, int matricula, int idade
 }
 
 // Função para cadastrar um novo curso
-void cadastrarCurso(listaCursos *listaCurso, char nomeCurso, int cargaHoraria)
+void cadastrarCurso(listaCursos *listaCurso, const char *nomeCurso, int cargaHoraria)
 {
     if (listaCurso->tamanhoListaCursos < MAX_SIZE_CURSOS)
     {
@@ -126,6 +130,29 @@ void cadastrarCurso(listaCursos *listaCurso, char nomeCurso, int cargaHoraria)
     else
     {
         printf("Lista cheia! O curso não pode ser adicionado na lista.\n");
+    }
+}
+
+// Função para cadastrar um professor
+void cadastrarProfessor(listaProfessores *professores, const char *nome[], const char *disciplinasLecionada[])
+{
+    if (professores->tamanhoListaProfessores < MAX_SIZE_PROFESSORES)
+    {
+        Professor novoProfessor;
+
+        strncpy(novoProfessor.nome, nome, sizeof(novoProfessor.nome) - 1);
+        strncpy(novoProfessor.disciplinaLecionada, disciplinasLecionada, sizeof(novoProfessor.disciplinaLecionada) - 1);
+
+        // Adiciona o novo professor à lista
+        professores->professores[professores->tamanhoListaProfessores] = novoProfessor;
+        // Atualiza o número de professores
+        professores->tamanhoListaProfessores++;
+
+        printf("Professor cadastrado com sucesso!\n");
+    }
+    else
+    {
+        printf("Lista cheia! O professor não pode ser adicionado na lista.\n");
     }
 }
 
@@ -175,22 +202,20 @@ void matricularAluno(listaAlunos *listaAluno, listaCursos *listaCurso)
     }
 
     // Realiza a matrícula do aluno no curso escolhido
-    listaAluno->alunos[matriculaAluno - 1].cursosAluno[listaAluno->alunos[matriculaAluno - 1].quantidadeCursos] = listaCurso;
+    listaAluno->alunos[matriculaAluno - 1].cursosAluno[listaAluno->alunos[matriculaAluno - 1].quantidadeCursos] = listaCurso->cursos[idCurso - 1];
 
     printf("Aluno matriculado no curso com sucesso!\n");
 }
 
 // Função para cadastrar uma nova turma
-void cadastrarTurma(listaTurmas *listaTurma, int identificador, Aluno aluno)
+void cadastrarTurma(listaTurmas *listaTurma)
 {
     if (listaTurma->tamanhoListaTurmas < MAX_SIZE_TURMAS)
     {
         // Captura de informações da nova turma
         Turma novaTurma;
 
-        novaTurma.identificador = identificador;
-        novaTurma.alunosMatriculados[novaTurma.quantidadeAlunos - 1] = aluno;
-        novaTurma.professorResponsavel = NULL; // Inicializando como NULL
+        novaTurma.identificador = listaTurma->tamanhoListaTurmas;
 
         // Adiciona a nova turma ao array de turmas
         listaTurma->turmas[listaTurma->tamanhoListaTurmas] = novaTurma;
@@ -198,7 +223,7 @@ void cadastrarTurma(listaTurmas *listaTurma, int identificador, Aluno aluno)
         // Atualiza o número de turmas
         listaTurma->tamanhoListaTurmas++;
 
-        printf("Turma cadastrada com sucesso!\n");
+        printf("Turma de identificador %d cadastrada com sucesso!\n", novaTurma.identificador);
     }
     else
     {
@@ -207,7 +232,7 @@ void cadastrarTurma(listaTurmas *listaTurma, int identificador, Aluno aluno)
 }
 
 // Função para designar um professor para uma turma
-void designarProfessor(listaProfessores *listaProfessor, listaTurmas *listaTurma, Professor professor)
+void designarProfessor(listaProfessores *listaProfessor, listaTurmas *listaTurma)
 {
     if (listaProfessor->tamanhoListaProfessores == 0 || listaTurma->tamanhoListaTurmas == 0)
     {
@@ -221,7 +246,7 @@ void designarProfessor(listaProfessores *listaProfessor, listaTurmas *listaTurma
     printf("\nProfessores Disponíveis: \n");
     for (int i = 0; i < listaProfessor->tamanhoListaProfessores; i++)
     {
-        printf("%d. %s - %s\n", i + 1, listaProfessor->professores[i].nome, listaProfessor->professores[i].disciplina);
+        printf("%d. %s - %s\n", i + 1, listaProfessor->professores[i].nome, listaProfessor->professores[i].disciplinaLecionada);
     }
 
     // Solicita a escolha do professor
@@ -251,8 +276,10 @@ void designarProfessor(listaProfessores *listaProfessor, listaTurmas *listaTurma
         return;
     }
 
+    listaProfessor->professores[idProfessor-1].quantidadeTurmas++;
+    int quantidadeTurmas = listaProfessor->professores[idProfessor-1].quantidadeTurmas;
     // Realiza a designação do professor para a turma escolhida
-    listaTurma->turmas[idTurma - 1].professorResponsavel = professor;
+    listaProfessor->professores[idProfessor - 1].turmasMinistradas[quantidadeTurmas] = listaTurma->turmas[idTurma - 1];
 
     printf("Professor designado para a turma com sucesso!\n");
 }
@@ -325,7 +352,7 @@ void exibirProfessoresComTurmas(listaProfessores *listaProfessor, listaTurmas *l
 
     for (int i = 0; i < listaProfessor->tamanhoListaProfessores; i++)
     {
-        printf("%d. Professor: %s - Disciplina: %s\n", i + 1, listaProfessor->professores[i].nome, listaProfessor->professores[i].disciplina);
+        printf("%d. Professor: %s - Disciplina: %s\n", i + 1, listaProfessor->professores[i].nome, listaProfessor->professores[i].disciplinaLecionada);
 
         printf("   Turmas associadas:\n");
 
@@ -361,11 +388,12 @@ int main()
     int opcao;
     do
     {
-        printf("\n=== Sistema Escolar ===\n");
+        printf("\nSelecione uma das opções abaixo:\n");
         printf("1. Cadastrar Aluno\n");
         printf("2. Cadastrar Curso\n");
-        printf("3. Matricular Aluno em Curso\n");
+        printf("3. Cadastrar Professor");
         printf("4. Cadastrar Turma\n");
+        printf("3. Matricular Aluno em Curso\n");
         printf("5. Designar Professor para Turma\n");
         printf("6. Listar Alunos por Turma\n");
         printf("7. Listar Cursos Disponíveis\n");
@@ -381,28 +409,51 @@ int main()
             int matriculaAluno, idadeAluno;
 
             printf("Digite o nome do aluno: ");
-            scanf("%s", &nomeAluno)
-            cadastrarAluno(&listaAluno, nomeAluno, matriculaAluno, idadeAluno);
+            scanf("%s", &nomeAluno);
+            cadastrarAluno(&listaAluno, nomeAluno, idadeAluno);
             break;
         case 2:
-            cadastrarCurso(&listaCurso);
+            char nomeCurso[50];
+            int cargaHoraria;
+
+            printf("Digite o nome do Curso: \n");
+            scanf("%s", &nomeCurso);
+
+            printf("Digite o nome do aluno: \n");
+            scanf("%d", &cargaHoraria);
+
+            cadastrarCurso(&listaCurso, nomeCurso, cargaHoraria);
             break;
+
         case 3:
-            matricularAluno(&listaAluno, &listaCurso);
+            char nomeProfessor[50];
+            char disciplinaLecionada[50];
+
+            printf("Digite o nome do professor:\n");
+            scanf("%s", &nomeProfessor);
+
+            printf("Digite a disciplina lecionada pelo professor:\n");
+            scanf("%s", &disciplinaLecionada);
+
+            cadastrarProfessor(&listaProfessor, nomeProfessor, disciplinaLecionada);
             break;
         case 4:
             cadastrarTurma(&listaTurma);
             break;
         case 5:
+            matricularAluno(&listaAluno, &listaCurso);
+            break;
+
+        case 6:
             designarProfessor(&listaProfessor, &listaTurma);
             break;
-        case 6:
+        case 7:
             listarAlunosPorTurma(&listaTurma, &listaAluno);
             break;
-        case 7:
+        case 8:
             listarCursosDisponiveis(&listaCurso);
             break;
-        case 8:
+        case 9:
             exibirProfessoresComTurmas(&listaProfessor, &listaTurma);
             break;
         case 0:

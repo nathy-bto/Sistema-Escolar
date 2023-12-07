@@ -7,9 +7,9 @@
       "request": "launch",
       "args": [],
       "stopAtEntry": false,
-      "externalConsole": false,
-      "cwd": "/workspaces/Sistema-Escolar",
-      "program": "/workspaces/Sistema-Escolar/build/Debug/outDebug",
+      "externalConsole": true,
+      "cwd": "c:/Users/reten/OneDrive/Documentos/GitHub/Sistema-Escolar",
+      "program": "c:/Users/reten/OneDrive/Documentos/GitHub/Sistema-Escolar/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
