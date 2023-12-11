@@ -116,8 +116,8 @@ void cadastrarCurso(listaCursos *listaCurso, const char *nomeCurso, int cargaHor
         // Captura de informações do novo curso
         Curso novoCurso;
 
-        strncpy(novoCurso.nomeCurso, novoCurso.nomeCurso, sizeof(novoCurso.nomeCurso) - 1);
-        novoCurso.cargaHoraria = novoCurso.cargaHoraria;
+        strncpy(novoCurso.nomeCurso, nomeCurso, sizeof(novoCurso.nomeCurso) - 1);
+        novoCurso.cargaHoraria = cargaHoraria;
 
         // Adiciona o novo curso ao array de cursos
         listaCurso->cursos[listaCurso->tamanhoListaCursos] = novoCurso;
